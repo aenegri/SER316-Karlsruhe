@@ -67,26 +67,6 @@ public class FileStorage implements Storage {
 		}
 	}
 
-	public static File writeDocumentToFile(Document doc, String filePath) {
-		File file = new File(filePath);
-		FileWriter writer = null;
-		try {
-			writer = new FileWriter(file);
-			writer.write(doc.toXML());
-			writer.flush();
-		} catch (IOException e) {
-			new ExceptionDialog(e, "Failed to write a document to " + filePath, "");
-		} finally {
-			try {
-				writer.close();
-			} catch (IOException e) {
-				new ExceptionDialog(e, "Failed to close file writer to " + filePath, "");
-			}
-		}
-
-		return file;
-	}
-
 	public static Document openDocument(InputStream in) throws Exception {
 		Builder builder = new Builder();
 		return builder.build(new InputStreamReader(in, "UTF-8"));

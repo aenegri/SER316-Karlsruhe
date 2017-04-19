@@ -47,13 +47,7 @@ import net.sf.memoranda.ResourcesList;
 import net.sf.memoranda.TaskList;
 import net.sf.memoranda.date.CurrentDate;
 import net.sf.memoranda.ui.htmleditor.HTMLEditor;
-import net.sf.memoranda.util.Configuration;
-import net.sf.memoranda.util.Context;
-import net.sf.memoranda.util.CurrentStorage;
-import net.sf.memoranda.util.Local;
-import net.sf.memoranda.util.ProjectExporter;
-import net.sf.memoranda.util.ProjectPackager;
-import net.sf.memoranda.util.Util;
+import net.sf.memoranda.util.*;
 import nu.xom.Builder;
 import nu.xom.Document;
 import nu.xom.Element;
@@ -120,6 +114,13 @@ public class AppFrame extends JFrame {
 		}
 	};
 
+	public Action exportToCloud = new AbstractAction() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			doExportToCloud();
+		}
+	};
+
 	public Action minimizeAction = new AbstractAction("Close the window") {
 		/**
 		 *
@@ -182,6 +183,7 @@ public class AppFrame extends JFrame {
 	JMenuItem jMenuFileNewNote = new JMenuItem(workPanel.dailyItemsPanel.editorPanel.newAction);
 	JMenuItem jMenuFilePackPrj = new JMenuItem(prjPackAction);
 	JMenuItem jMenuFileUnpackPrj = new JMenuItem(prjUnpackAction);
+	JMenuItem jMenuFileExportPrjCloud = new JMenuItem(exportToCloud);
 	JMenuItem jMenuFileExportPrj = new JMenuItem(exportNotesAction);
 	JMenuItem jMenuFileImportPrj = new JMenuItem(importNotesAction);
 	JMenuItem jMenuFileImportNote = new JMenuItem(importOneNoteAction);
@@ -346,6 +348,7 @@ public class AppFrame extends JFrame {
 		jMenuFileExportNote.setText(Local.getString("Export current note") + "...");
 		jMenuFileImportNote.setText(Local.getString("Import one note") + "...");
 		jMenuFilePackPrj.setText(Local.getString("Pack project") + "...");
+		jMenuFileExportPrjCloud.setText("Export project to cloud");
 		jMenuFileMin.setText(Local.getString("Close the window"));
 		jMenuFileMin.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F10, InputEvent.ALT_MASK));
 
@@ -455,6 +458,7 @@ public class AppFrame extends JFrame {
 		jMenuFile.addSeparator();
 		jMenuFile.add(jMenuFilePackPrj);
 		jMenuFile.add(jMenuFileUnpackPrj);
+		jMenuFile.add(jMenuFileExportPrjCloud);
 		jMenuFile.addSeparator();
 		jMenuFile.add(jMenuFileExportPrj);
 		jMenuFile.add(jMenuFileExportNote);
@@ -564,6 +568,7 @@ public class AppFrame extends JFrame {
 		JMenuItem expNote = new JMenuItem();
 		JMenuItem packNote = new JMenuItem();
 		JMenuItem unpcNote = new JMenuItem();
+		JMenuItem cloudNote = new JMenuItem();
 		JMenuItem imOneNote = new JMenuItem();
 		newPrj.setAction(projectsPanel.newProjectAction);
 		popMenu.add(newPrj);
@@ -571,6 +576,8 @@ public class AppFrame extends JFrame {
 		popMenu.add(packNote);
 		unpcNote.setAction(prjUnpackAction);
 		popMenu.add(unpcNote);
+		cloudNote.setAction(exportToCloud);
+		popMenu.add(cloudNote);
 		imOneNote.setAction(importOneNoteAction);
 		popMenu.add(imOneNote);
 		impNote.setAction(importNotesAction);
@@ -825,6 +832,10 @@ public class AppFrame extends JFrame {
 		java.io.File f = chooser.getSelectedFile();
 		ProjectPackager.unpack(f);
 		projectsPanel.prjTablePanel.updateUI();
+	}
+
+	public void doExportToCloud() {
+		ProjectCloudExporter.exportProject(CurrentProject.get());
 	}
 
 	public void showPreferences() {
