@@ -155,14 +155,6 @@ public class AppFrame extends JFrame {
 			ppExport_actionPerformed(e);
 		}
 	};
-	
-	public Action googleexportNotesAction =
-			new AbstractAction(Local.getString("Export notes to google Drive") + "...") {
-
-		public void actionPerformed(ActionEvent e) {
-			ppExportGoogle_actionPerformed(e);
-		}
-	};
 
 	public Action importNotesAction = new AbstractAction(Local.getString("Import multiple notes")) {
 
@@ -194,7 +186,6 @@ public class AppFrame extends JFrame {
 	JMenuItem jMenuFileUnpackPrj = new JMenuItem(prjUnpackAction);
 	JMenuItem jMenuFileExportPrjCloud = new JMenuItem(exportToCloud);
 	JMenuItem jMenuFileExportPrj = new JMenuItem(exportNotesAction);
-	JMenuItem jMenuGoogleExportPrj = new JMenuItem(googleexportNotesAction);
 	JMenuItem jMenuFileImportPrj = new JMenuItem(importNotesAction);
 	JMenuItem jMenuFileImportNote = new JMenuItem(importOneNoteAction);
 	JMenuItem jMenuFileExportNote = new JMenuItem(workPanel.dailyItemsPanel.editorPanel.exportAction);
@@ -354,11 +345,11 @@ public class AppFrame extends JFrame {
 		 */
 		jMenuFileNewPrj.setAction(projectsPanel.newProjectAction);
 
-		jMenuFileUnpackPrj.setText(Local.getString("Unpack project") + "...");
+		jMenuFileUnpackPrj.setText("Import project");
 		jMenuFileExportNote.setText(Local.getString("Export current note") + "...");
 		jMenuFileImportNote.setText(Local.getString("Import one note") + "...");
-		jMenuFilePackPrj.setText(Local.getString("Pack project") + "...");
-		jMenuFileExportPrjCloud.setText("Export project to cloud");
+		jMenuFilePackPrj.setText("Export project");
+		jMenuFileExportPrjCloud.setText("Backup project to cloud");
 		jMenuFileMin.setText(Local.getString("Close the window"));
 		jMenuFileMin.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F10, InputEvent.ALT_MASK));
 
@@ -370,7 +361,7 @@ public class AppFrame extends JFrame {
 		jMenuEditRedo.setToolTipText(Local.getString("Redo"));
 		jMenuEditCut.setText(Local.getString("Cut"));
 		jMenuEditCut.setToolTipText(Local.getString("Cut"));
-		jMenuEditCopy.setText((String) Local.getString("Copy"));
+		jMenuEditCopy.setText(Local.getString("Copy"));
 		jMenuEditCopy.setToolTipText(Local.getString("Copy"));
 		jMenuEditPaste.setText(Local.getString("Paste"));
 		jMenuEditPaste.setToolTipText(Local.getString("Paste"));
@@ -471,7 +462,6 @@ public class AppFrame extends JFrame {
 		jMenuFile.add(jMenuFileExportPrjCloud);
 		jMenuFile.addSeparator();
 		jMenuFile.add(jMenuFileExportPrj);
-		jMenuFile.add(jMenuGoogleExportPrj);
 		jMenuFile.add(jMenuFileExportNote);
 		jMenuFile.add(jMenuFileImportNote);
 		jMenuFile.add(jMenuFileImportPrj);
@@ -847,6 +837,12 @@ public class AppFrame extends JFrame {
 
 	public void doExportToCloud() {
 		ProjectCloudExporter.exportProject(CurrentProject.get());
+
+		try {
+			BackupService.test();
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
 	}
 
 	public void showPreferences() {
@@ -997,14 +993,6 @@ public class AppFrame extends JFrame {
 
 		} catch (Exception exc) {
 			exc.printStackTrace();
-		}
-	}
-	
-	protected void ppExportGoogle_actionPerformed(ActionEvent e) {
-		try {
-			BackupService.test();
-		} catch (Exception e1) {
-			e1.printStackTrace();
 		}
 	}
 
