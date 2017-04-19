@@ -8,13 +8,7 @@
  */
 package net.sf.memoranda.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.URL;
 
 import javax.swing.text.html.HTMLDocument;
@@ -71,6 +65,26 @@ public class FileStorage implements Storage {
 		} catch (IOException ex) {
 			new ExceptionDialog(ex, "Failed to write a document to " + filePath, "");
 		}
+	}
+
+	public static File writeDocumentToFile(Document doc, String filePath) {
+		File file = new File(filePath);
+		FileWriter writer = null;
+		try {
+			writer = new FileWriter(file);
+			writer.write(doc.toXML());
+			writer.flush();
+		} catch (IOException e) {
+			new ExceptionDialog(e, "Failed to write a document to " + filePath, "");
+		} finally {
+			try {
+				writer.close();
+			} catch (IOException e) {
+				new ExceptionDialog(e, "Failed to close file writer to " + filePath, "");
+			}
+		}
+
+		return file;
 	}
 
 	public static Document openDocument(InputStream in) throws Exception {
