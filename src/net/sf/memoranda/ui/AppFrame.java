@@ -836,7 +836,7 @@ public class AppFrame extends JFrame {
 	}
 
 	public void doExportToCloud() {
-		ProjectCloudExporter.exportProject(CurrentProject.get());
+		File backupZip = ProjectCloudExporter.createZip(CurrentProject.get());
 
 		try {
 			BackupService.test();
